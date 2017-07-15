@@ -15,6 +15,10 @@ sudo yum install -y python-pip
 sudo pip install --upgrade pip
 sudo pip install docker-compose
 
+#Disable firewall
+systemctl stop firewalld
+systemctl disable firewalld
+
 #sudo reboot
 
 #Change timezone to London time

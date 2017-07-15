@@ -1,0 +1,7 @@
+Name,IP,Hostname
+Foreman,192.168.0.100,cezar.lab.home.example.com
+Gitlab,192.168.0.120,gitlab.cezar.home.example.com
+Jenkins,192.168.0.110
+Dockerhost,192.168.0.140
+Openvpn,192.168.0.101,openvpn.cezar.home.example.com
+BuildMachine,192.168.0.130
