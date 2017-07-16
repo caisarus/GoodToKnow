@@ -22,3 +22,6 @@ sudo systemctl enable jenkins.service
 chkconfig jenkins.service on
 sudo firewall-cmd --zone=public --permanent --add-port=8080/tcp
 sudo firewall-cmd --reload
+
+Requirements for slave nodes:
+Java, Git

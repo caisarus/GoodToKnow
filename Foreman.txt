@@ -2,6 +2,28 @@ Install foreman on Centos 7
 https://syslint.com/blog/tutorial/how-to-install-and-configure-foreman-on-centos-7-or-rhel-7/
 
 Add existing machine to foreman
+
+echo "Configuring puppet"
+cat > /etc/puppet/puppet.conf << EOF
+
+[main]
+vardir = /var/lib/puppet
+logdir = /var/log/puppet
+rundir = /var/run/puppet
+ssldir = \$vardir/ssl
+
+[agent]
+pluginsync      = true
+report          = true
+ignoreschedules = true
+daemon          = false
+ca_server       = foreman-hostname.domain.com
+certname        = `hostname`
+environment     = production
+server          = foreman-hostname.domain.com
+
+EOF
+
 rpm -ivh https://yum.puppetlabs.com/el/7/products/x86_64/puppetlabs-release-7-11.noarch.rpm
 yum install -y puppet-server
 puppet agent -t -v
