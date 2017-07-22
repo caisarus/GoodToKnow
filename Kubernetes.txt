@@ -1,0 +1,163 @@
+install ntpd
+add hostnames in /etc/hosts
+add nameserver in /etc/resolv.conf
+sudo vi /etc/yum.repos.d/virt7-docker-common-release.repo 
+	[virt7-docker-common-release]
+	name=virt7-docker-common-release
+	baseurl=http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+	gpgcheck=0
+disable firewall
+install etcd
+yum install -y --enablerepo=virt7-docker-common-release kubernetes docker on everything
+
+
+
+ON MASTER
+cd /etc/kubernetes/
+vi config
+change and add KUBE_MASTER="--master=http://controller:8080"
+
+KUBE_ETCD_SERVERS="--etcd-servers=http://controller:2379"
+
+cd /etc/etcd
+vi conf
+change to ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
+and for cluster the same
+ cd /etc/kubernetes/
+vi apiserver
+KUBE_API_ADDRESS="--address=0.0.0.0"
+
+# The port on the local server to listen on.
+KUBE_API_PORT="--port=8080"
+
+# Port minions listen on
+KUBELET_PORT="--kubelet-port=10250"
+#comment admission control
+systemctl enable etcd kube-apiserver kube-controller-manager kube-scheduler
+systemctl status etcd kube-apiserver kube-controller-manager kube-scheduler
+systemctl start etcd kube-apiserver kube-controller-manager kube-scheduler
+systemctl status etcd kube-apiserver kube-controller-manager kube-scheduler | grep "(running)" | wc -l
+
+
+
+
+
+ON MINIONS:
+vi /etc/kubernetes/config
+
+KUBE_MASTER="--master=http://controller:8080"
+KUBE_ETCD_SERVERS="--etcd-servers=http://controller:2379"
+
+
+
+vi /etc/kubernetes/kubelet
+KUBELET_ADDRESS="--address=0.0.0.0"
+
+# The port for the info server to serve on
+KUBELET_PORT="--port=10250"
+
+# You may leave this blank to use the actual hostname
+KUBELET_HOSTNAME="--hostname-override=mini1"
+
+# location of the api-server
+KUBELET_API_SERVER="--api-servers=http://controller:8080"
+
+# pod infrastructure container
+#KUBELET_POD_INFRA_CONTAINER="--pod-infra-container-image=registry.access.redhat.com/rhel7/pod-infrastructure:latest"
+
+systemctl enable kube-proxy kubelet docker
+systemctl start kube-proxy kubelet docker
+systemctl status kube-proxy kubelet docker | grep "(running)" | wc -l
+
+
+
+TO CREATEA A NEW POD CREATE YAML FILE
+ALL FROM MASTER
+[root@controller ~]# cat nginx.yml
+apiVersion: v1
+kind: Pod
+metadata:
+   name: nginx
+spec:
+   containers:
+   - name: nginx
+     image: nginx:1.7.9
+     ports:
+     - containerPort: 80
+
+create pod with 
+kubectl create -f ./nginx.yml
+ kubectl describe pod nginx
+
+  77  kubectl run busybox --image=busybox --restart=Never --tty -i --generator=run-pod/v1
+   78  kubectl get pods
+   79  kubectl delete pod busybox
+ kubectl create -f nginx.yml
+   88  kubectl port-forward nginx :80 &
+   93  wget -qO- http://localhost:43723
+   
+  kubectl get pods -l app=nginx
+  modified in yaml file "metadata:
+   name: nginx
+   labels:
+     app: nginx
+"
+
+Deployment production yaml example
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+   name: nginx-deployment-prod
+spec:
+   replicas: 1
+   template:
+     metadata:
+       labels:
+         app: nginx-deployment-prod
+     spec:
+       containers:
+       - name: nginx-deployment-prod
+         image: nginx:1.7.9
+         ports:
+         - containerPort: 80
+
+120  cp nginx-deployment-prod.yml nginx-deployment-dev.yml
+  121  vi nginx-deployment-dev.yml
+  122  sed -i 's/prod/dev/g' nginx-deployment-dev.yml
+  123  cat nginx-deployment-dev.yml
+  124  kubectl create -f nginx-deployment-dev.yml
+  125  kubectl get deploymen
+  126  kubectl get deployments
+  127  kubectl get pods
+  128  kubectl describe deploymends
+  129  kubectl describe deployments -l app=nginx-deployment-dev
+
+ To update existing deployments modify the current version (to nginx 1.8)
+ [root@controller Builds]# cp nginx-deployment-dev.yml nginx-deployment-dev-update.yml
+[root@controller Builds]# vim nginx-deployment-dev-update.yml
+[root@controller Builds]# kubectl apply -f nginx-deployment-dev-update.yml
+deployment "nginx-deployment-dev" configured
+
+
+delploy replication pod
+[root@controller Builds]# vim nginx-multi-label.yml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+   name: nginx-www
+spec:
+   replicas: 3
+   selector:
+     app: nginx
+   template:
+     metadata:
+       name: nginx
+       labels:
+         app: nginx
+     spec:
+       containers:
+       - name: nginx
+         image: nginx
+         ports:
+         - containerPort: 80
+
