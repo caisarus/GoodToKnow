@@ -268,3 +268,106 @@ spec:
          ports:
          - containerPort: 80
 
+
+kubectl get replicationcontrollers
+kubectl delete replicationcontroller nginx-www
+
+SERVICES
+
+
+[root@kubernetes-master builds]# cat nginx-service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  ports:
+  - port: 8000
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+
+kubectl describe service nginx-service
+take the cluster IPV
+kubectl run busybox --generator=run-pod/v1 --image=busybox --restart=Never --tty -i
+from busybox wget on the cluster ip
+
+RUN TEMPORARY PODS AT THE COMMAND LINE
+
+# .bashrc
+
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias k='kubectl'
+alias kp='kubectl get pods'
+alias kd='kubectl get deployments'
+alias krc='kubectl get replicationcontrollers'
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+
+kubectl run mysample --image=latest123/apache
+Run 2 replicas with labels (can add --port)
+kubectl run myreplicas --image=latest123/apache --replicas=2 --labels=app=myapache,version=1.0
+
+
+INTERACTING WITH PODS
+[root@kubernetes-master builds]# cat myapache.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapache
+spec:
+  containers:
+  - name: myapache
+    image: latest123/apache
+    ports:
+      containerPort: 80
+
+[root@kubernetes-master builds]# k exec myapache date
+Sat Jul 29 20:52:49 UTC 2017
+
+#Use this to connect to the container ID inside the myapache POD
+[root@kubernetes-master builds]# k exec myapache -c CONTAINERID date
+
+[root@kubernetes-master builds]# k exec myapache -i -t -- /bin/bash
+root@myapache:/# ls
+
+#To have the bash configured properly in DEBIAN
+export TERM=xterm
+
+LOGS
+[root@kubernetes-master builds]# k logs myapache
+
+[root@kubernetes-master builds]# k logs --tail=1 myapache
+
+[root@kubernetes-master builds]# k logs --since=24h myapache
+
+k logs -f myapache
+
+k logs -f -c CONTAINERID myapache
+
+AUTOSCALING AND SCALING OUR PODS
+[root@kubernetes-master builds]# k run myautoscale --image=latest123/apache --port=80 --labels=app=myautoscale
+
+[root@kubernetes-master builds]# k autoscale deployment myautoscale --min=3 --max=9
+deployment "myautoscale" autoscaled
+
+[root@kubernetes-master builds]# k scale --current-replicas=3 --replicas=9 deployment/myautoscale
+deployment "myautoscale" scaled
+
+cannot scale to below the minimum that we set first
+
+FAILURE and RECOVERY
+Need to use a service to load balance the pods and if one is not running then the LB will not send requests to it
+The pod will recover once the minion is back up
+
+
+
