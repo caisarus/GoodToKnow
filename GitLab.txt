@@ -11,3 +11,8 @@ sudo systemctl reload firewalld
 curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash
 sudo yum -y install gitlab-ce
 sudo gitlab-ctl reconfigure
+
+GIT LFS
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.rpm.sh | sudo bash
+yum install -y git-lfs
+git lfs install
