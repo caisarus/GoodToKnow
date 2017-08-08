@@ -1,16 +1,36 @@
 #!/bin/bash
 
-yum update -y
-yum install -y epel-release
-yum install -y python-pip
-pip install --upgrade pip
-pip install docker-compose
-systemctl stop firewalld
-systemctl disable firewalld
-mv /etc/localtime /etc/localtime.bak
-ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
-yum install -y ntp ntpdate
-chkconfig ntpd on
-ntpdate pool.ntp.org
-/etc/init.d/ntpd start
-reboot
+#Update system
+sudo yum update -y
+sudo yum install -y epel-release
+sudo yum install -y vim
+
+#Install docker
+sudo yum install -y docker 
+
+#Add user to docker group to be able to use docker without root
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo service docker restart
+
+#Install docker-compose
+sudo yum install -y python-pip
+sudo pip install --upgrade pip
+sudo pip install docker-compose
+
+#Disable firewall
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+
+#Set localtime
+sudo mv /etc/localtime /etc/localtime.bak
+sudo ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
+
+#Keep system date updated
+sudo yum install -y ntp ntpdate
+sudo chkconfig ntpd on
+sudo ntpdate pool.ntp.org
+sudo /etc/init.d/ntpd start
+
+#Reboot for safety
+sudo reboot
