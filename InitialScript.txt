@@ -30,7 +30,10 @@ sudo ln -s /usr/share/zoneinfo/Europe/London /etc/localtime
 sudo yum install -y ntp ntpdate
 sudo chkconfig ntpd on
 sudo ntpdate pool.ntp.org
-sudo /etc/init.d/ntpd start
+sudo  service ntpd start
+
+#Disable SELINUX
+#sudo sed -i 's/enforcing/disabled/g' /etc/sysconfig/selinux
 
 #Reboot for safety
 sudo reboot
