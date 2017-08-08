@@ -9,6 +9,7 @@ sudo yum install -y vim
 sudo yum install -y docker 
 
 #Add user to docker group to be able to use docker without root
+sudo service docker start
 sudo groupadd docker
 sudo usermod -aG docker $USER
 sudo service docker restart
