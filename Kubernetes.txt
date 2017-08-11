@@ -263,3 +263,8 @@ The pod will recover once the minion is back up
 
 
 
+KBERNETES UDEMY
+
+kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
+k expose deployment hello-minikube --type=NodePort
+kubectl get services
