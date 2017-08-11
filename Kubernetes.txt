@@ -268,3 +268,5 @@ KBERNETES UDEMY
 kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=8080
 k expose deployment hello-minikube --type=NodePort
 kubectl get services
+k port-forward nodehelloworld.example.com 8081:3000
+k expose pod nodehelloworld.example.com --type=NodePort --name nodewelloworld-service
