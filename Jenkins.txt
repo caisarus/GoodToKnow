@@ -32,3 +32,6 @@ docker run -p 8080:8080 -p 50000:50000 -v /your/home:/var/jenkins_home jenkins
 
 With SE linux
 docker run -itd -p 8080:8080 -p 50000:50000 --name jenkins -v /srv/jenkins:/var/jenkins_home:Z jenkins/jenkins
+
+#To add a slave run this on slave after defining it on Jenkins
+java -jar agent.jar -jnlpUrl http://192.168.0.74:8080/computer/BuildMachine/slave-agent.jnlp -secret c33f94a41a84a7d18a1cf64fdc1d5f0d32646a10286ccb68ecb811671511621d -workDir "/root/workspace"
