@@ -8,6 +8,8 @@ sudo yum install -y vim
 #Install docker
 sudo yum install -y docker 
 
+
+
 #Add user to docker group to be able to use docker without root
 sudo service docker start
 sudo chkconfig docker on
@@ -19,6 +21,12 @@ sudo service docker restart
 sudo yum install -y python-pip
 sudo pip install --upgrade pip
 sudo pip install docker-compose
+
+#Install java
+sudo yum install -y java
+
+#Install git
+sudo yum install -y git
 
 #Disable firewall
 sudo systemctl stop firewalld
