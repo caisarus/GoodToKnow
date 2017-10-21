@@ -1,26 +1,34 @@
 http://yum.puppetlabs.com/
 http://apt.puppetlabs.com/
-#Puppet master
+#Puppet master on Centos
+hostname puppetmaster
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 yum install -y puppetserver
 #Add puppet to path
 sed -i '\/export PATH=\$PATH:\/opt\/puppetlabs\/bin/ a \ \ export PATH=\$PATH:\/opt\/puppetlabs\/puppet\/bin' /etc/profile.d/puppet-agent.sh
+# contains config /etc/sysconfig/puppetserver
+export PATH=$PATH:/opt/puppetlabs/puppet/bin
+systemctl start puppetserver
 
 #Puppet Agent
 #Centos
+hostname centos-agent
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 #install puppet agent
 yum install -y puppet-agent
 #Add puppet to path
+export PATH=$PATH:/opt/puppetlabs/puppet/bin
 sed -i '\/export PATH=\$PATH:\/opt\/puppetlabs\/bin/ a \ \ export PATH=\$PATH:\/opt\/puppetlabs\/puppet\/bin' /etc/profile.d/puppet-agent.sh
 
 
 #Ubuntu
+hostname ubuntu-agent
 wget http://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb
 dpkg -i puppetlabs-release-pc1-xenial.deb
 apt-get update -yum
 apt-get install puppet-agent
 #Add puppet to path
+export PATH=$PATH:/opt/puppetlabs/puppet/bin
 sed -i 's/\/usr\/local\/games/\/usr\/local\/games:\/opt\/puppetlabs\/bin\:\/opt\/puppetlabs\/puppet\/bin/g' /etc/environment
 
 
