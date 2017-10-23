@@ -1,7 +1,7 @@
 http://yum.puppetlabs.com/
 http://apt.puppetlabs.com/
 #Puppet master on Centos
-hostname puppetmaster
+hostnamectl set-hostname puppetmaster
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 yum install -y puppetserver
 #Add puppet to path
@@ -9,20 +9,31 @@ sed -i '\/export PATH=\$PATH:\/opt\/puppetlabs\/bin/ a \ \ export PATH=\$PATH:\/
 # contains config /etc/sysconfig/puppetserver
 export PATH=$PATH:/opt/puppetlabs/puppet/bin
 systemctl start puppetserver
+#ps -ef | grep puppet#
+#netstat -tlpn#
+#/etc/puppetlabs/code/environments/production/manifests
+#Define the agent who has agent in his name will install the webserver module
+#mkdir -p /etc/puppetlabs/code/environments/production/modules/webserver/manifests
+#vim init.pp
+echo '192.168.0.54 puppetmaster.local' >> /etc/hosts
+puppet cert list
+puppet cert sign centos-agent
+
 
 #Puppet Agent
 #Centos
-hostname centos-agent
+hostnamectl set-hostname centos-agent
 rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
 #install puppet agent
 yum install -y puppet-agent
 #Add puppet to path
 export PATH=$PATH:/opt/puppetlabs/puppet/bin
 sed -i '\/export PATH=\$PATH:\/opt\/puppetlabs\/bin/ a \ \ export PATH=\$PATH:\/opt\/puppetlabs\/puppet\/bin' /etc/profile.d/puppet-agent.sh
+puppet agent --test --server puppetmaster.local
 
 
 #Ubuntu
-hostname ubuntu-agent
+hostnamectl set-hostname ubuntu-agent
 wget http://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb
 dpkg -i puppetlabs-release-pc1-xenial.deb
 apt-get update -yum
