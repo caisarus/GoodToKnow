@@ -1,0 +1,55 @@
+control:
+  container_name: control
+  restart: always
+  build: ./control
+  hostname: control
+  ports:
+    - "33:22"
+  links:
+    - lb01:lb01
+    - app01:app01
+    - app02:app02
+    - db01:db01
+
+lb01:
+  container_name: lb01
+  restart: always
+  build: ./lb01
+  hostname: lb01
+  ports:
+    - "34:22"
+  links:
+    - app01:app01
+    - app02:app02
+    - db01:db01
+
+
+app01:
+  container_name: app01
+  restart: always
+  build: ./app01
+  hostname: app01
+  ports:
+    - "35:22"
+  links:
+    - db01:db01
+
+app02:
+  container_name: app02
+  restart: always
+  build: ./app02
+  hostname: app02
+  ports:
+    - "36:22"
+  links:
+    - db01:db01
+
+db01:
+  container_name: db01
+  restart: always
+  build: ./db01
+  hostname: db01
+  ports:
+    - "37:22"
+ 
+
