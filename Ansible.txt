@@ -1,0 +1,14 @@
+#Used on Ubuntu
+#On controller
+sudo apt-get install software-properties-common
+sudo apt-add-repository ppa:ansible/ansible -y
+sudo apt-get update
+sudo apt-get install ansible -y
+
+sudo useradd ansible
+sudo mkdir /home/ansible
+sudo chown ansible:ansible /home/ansible
+echo "ansible ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+sudo usermod -s /bin/bash ansible #to access bash directly
+#/etc/ansible/ansible.cfg for configs. You can create a local ansible.cfg file in which you can define where the inventory file lives
+
