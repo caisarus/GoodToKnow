@@ -15,6 +15,8 @@ RUN chown -R ansible:ansible /home/ansible && chmod 0600 /home/ansible/.ssh/auth
 
 EXPOSE 22
 
+ENV TERM xterm
+
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
