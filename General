@@ -20,6 +20,10 @@ sudo yum install -y python-pip
 sudo pip install --upgrade pip
 sudo pip install docker-compose
 
+#DOCKER
+docker ps -q -a | xargs docker rm
+docker rmi $(docker images | grep “^<none>” | awk ‘{print $3}’)
+
 #Disable firewall
 systemctl stop firewalld
 systemctl disable firewalld
