@@ -1,0 +1,52 @@
+    8  sudo yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
+    9  sudo groupadd nagcmd
+   10  sudo usermod -a -G nagcmd nagios
+   11  ls
+   12  pwd
+   13  curl -L -O https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.1.1.tar.gz
+   14  tar xvf nagios-*.tar.gz
+   15  cd nagios-*
+   16  ./configure --with-command-group=nagcmd
+   17  make all
+   18  sudo make install
+   19  sudo make install-commandmode
+   20  sudo make install-init
+   21  sudo make install-config
+   22  sudo make install-webconf
+   23  sudo yum install -y apache
+   24  sudo yum install httpd
+   25  sudo make install-webconf
+   26  sudo usermod -G nagcmd apache
+   27  cd ~
+   28  curl -L -O http://nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
+   29  tar xvf nagios-plugins-*.tar.gz
+   30  cd nagios-plugins-*
+   31  ./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
+   32  make
+   33  sudo make install
+   34  cd ~
+   35  curl -L -O http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
+   36  tar xvf nrpe-*.tar.gz
+   37  cd nrpe-*
+   38  ./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
+   39  make all
+   40  sudo make install
+   41  sudo make install-xinetd
+   42  sudo make install-daemon-config
+   43  sudo vi /etc/xinetd.d/nrpe
+   44  sudo service xinetd restart
+   45  sudo vim /usr/local/nagios/etc/nagios.cfg
+   46  sudo mkdir /usr/local/nagios/etc/servers
+   47  sudo vim /usr/local/nagios/etc/objects/contacts.cfg
+   48  sudo vim /usr/local/nagios/etc/objects/commands.cfg
+   49  sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+   50  sudo systemctl daemon-reload
+   51  sudo systemctl start nagios.service
+   52  sudo systemctl restart httpd.service
+   53  sudo chkconfig nagios on
+   54  setenforce 0
+   55  sudo setenforce 0
+   56  sudo service firewalld status
+   57  sudo service firewalld stop
+   58  sudo yum install php
+   59  sudo systemctl restart httpd.service
