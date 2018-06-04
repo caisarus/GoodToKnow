@@ -1,3 +1,5 @@
+#In /etc/mail.rc file put following
+
 set smtp-use-starttls
 
 set smtp=mail.whatever.org:587
