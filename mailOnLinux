@@ -1,0 +1,13 @@
+set smtp-use-starttls
+
+set smtp=mail.whatever.org:587
+
+set smtp-auth=login
+
+set smtp-auth-user=user@whatever.org
+
+set smtp-auth-password="superduperultrasecurepassword"
+
+set ssl-verify=ignore
+
+set nss-config-dir=/etc/pki/nssdb/
