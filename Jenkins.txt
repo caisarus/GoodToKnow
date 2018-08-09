@@ -1,3 +1,7 @@
+To change build number in Jenkins
+Manage Jenkins -> Script Console
+Jenkins.instance.getItemByFullName("YourJobName").updateNextBuildNumber(45)
+
 Docker
 docker run --name jenkins -itd -p 8080:8080 -p 50000:50000 -v /var/jenkins_home jenkins
 
